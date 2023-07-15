@@ -8,7 +8,7 @@ import Spinner from '../spinner/Spinner';
 
 const HeroesList = () => {
     const { filters, heroesLoadingStatus } = useSelector(state => state);
-    console.log(filters)
+    console.log('heroi list',filters)
     const dispatch = useDispatch();
     const {request} = useHttp();
 

@@ -1,22 +1,22 @@
 {
   "heroes": [
     {
-      "id": 2,
-      "name": "Неизвестный герой",
-      "description": "Скрывающийся в тени",
-      "element": "wind"
-    },
-    {
-      "id": "lk3ml0zk",
-      "name": "Mila",
-      "description": "She is good at design",
-      "element": "water"
-    },
-    {
-      "id": "lk3nbyh4",
-      "name": "Igor",
-      "description": "write js code",
+      "id": 1,
+      "name": "Первый герой",
+      "description": "Первый герой в рейтинге!",
       "element": "fire"
+    },
+    {
+      "id": "lk3p761e",
+      "name": "Igor",
+      "description": "fdg",
+      "element": "fire"
+    },
+    {
+      "id": "lk3vlh6q",
+      "name": "Mila",
+      "description": "i am good at design",
+      "element": "water"
     }
   ],
   "filters": [

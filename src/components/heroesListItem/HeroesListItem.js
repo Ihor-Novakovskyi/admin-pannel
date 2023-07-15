@@ -1,6 +1,6 @@
 
-import { deleteHeroe } from "../../actions";
-import { useDispatch } from "react-redux";
+import { deleteHeroe, filterHeroes } from "../../actions";
+import { useDispatch, useSelector } from "react-redux";
 import { useHttp } from "../../hooks/http.hook";
 import { Transition } from 'react-transition-group';
 import { useRef, useState, useEffect } from "react";
@@ -14,21 +14,30 @@ const defaultStyle = {
 
 
 const transitionStyles = {
-    entering: { opacity: 1 },
-    entered: { opacity: 1 },
-    exiting: { opacity: 0 },
-    exited: { opacity: 0 },
-};;
+    noTransparent: { opacity: 1 },
+    transparent: { opacity: 0 },
+};
 
 const HeroesListItem = ({ id, name, description, element }) => {
     const { request } = useHttp();
+    const filter = useSelector(state => state.filter);
     const dispatch = useDispatch();
+    const [initDelete, setInitDelete] = useState(false)
     const ref = useRef(null);
-    const [initStyle, setInitStyle] = useState(false);
+    const [transparent, setTransparent] = useState('transparent');
+    console.log(filter)
     let elementClassName = '';
-    useEffect(() => setInitStyle(true), [])
+    useEffect(() => {
+        if (element === filter || filter === 'all') {
+            setTransparent('noTransparent');
+            return;
+        }
+        setTransparent('transparent');
+
+    }, [filter])
     const deleteHero = () => {
-        setInitStyle(false)
+        setTransparent('transparent');
+        setInitDelete(true);
     }
     switch (element) {
         case 'fire':
@@ -46,42 +55,45 @@ const HeroesListItem = ({ id, name, description, element }) => {
         default:
             elementClassName = 'bg-warning bg-gradient';
     }
-    console.log(initStyle)
+    // console.log(initStyle)
     return (
-        <Transition nodeRef={ ref } in={ initStyle } timeout={ duration }>
-            { state => {
-                console.log('state', state)
-                return (
-                    <li
-                        style={ {
-                            ...defaultStyle,
-                            ...transitionStyles[state]
-                        } }
-                        onTransitionEnd={ () => {
-                            console.log('end transitioned', state)
-                            if (state === 'exiting') {
-                                dispatch(deleteHeroe(id));
-                                request(`http://localhost:3000/heroes/${id}`, 'DELETE')
-                            }
-                        } }
-                        ref={ ref }
-                        className={ `card flex-row mb-4 shadow-lg text-white ${elementClassName}` }>
-                        <img src="http://www.stpaulsteinbach.org/wp-content/uploads/2014/09/unknown-hero.jpg"
-                            className="img-fluid w-25 d-inline"
-                            alt="unknown hero"
-                            style={ { 'objectFit': 'cover' } } />
-                        <div className="card-body">
-
-                            <h3 className="card-title">{ name }</h3>
-                            <p className="card-text">{ description }</p>
-                        </div>
-                        <span onClick={ deleteHero } className="position-absolute top-0 start-100 translate-middle badge border rounded-pill bg-light">
-                            <button type="button" className="btn-close btn-close" aria-label="Close"></button>
-                        </span>
-                    </li>
-                )
+        <li
+            style={ {
+                ...defaultStyle,
+                ...transitionStyles[transparent]
             } }
-        </Transition>
+            onTransitionEnd={ () => {
+                console.log('end transitioned')
+                if (transparent === 'transparent' && initDelete) {
+                    dispatch(deleteHeroe(id));
+                    request(`http://localhost:3000/heroes/${id}`, 'DELETE')
+                    console.log('delete')
+                    return;
+                }
+                if (transparent === 'transparent') {
+                    console.log(1)
+                    console.log('id', id)
+                    console.log(1)
+                    dispatch(filterHeroes(filter))
+                    console.log('filter', filter)
+                    console.log(2)
+                };
+            } }
+            ref={ ref }
+            className={ `card flex-row mb-4 shadow-lg text-white ${elementClassName}` }>
+            <img src="http://www.stpaulsteinbach.org/wp-content/uploads/2014/09/unknown-hero.jpg"
+                className="img-fluid w-25 d-inline"
+                alt="unknown hero"
+                style={ { 'objectFit': 'cover' } } />
+            <div className="card-body">
+
+                <h3 className="card-title">{ name }</h3>
+                <p className="card-text">{ description }</p>
+            </div>
+            <span onClick={ deleteHero } className="position-absolute top-0 start-100 translate-middle badge border rounded-pill bg-light">
+                <button type="button" className="btn-close btn-close" aria-label="Close"></button>
+            </span>
+        </li>
     )
 
 }

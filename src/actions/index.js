@@ -26,3 +26,4 @@ export const filterHeroes = (filter) => {
 }
 
 export const addHeroe = (heroe) => ({ type: 'ADD_HEROE', payload: heroe });
+export const initFilter = (filter) => ({type: 'INIT_FILTER', payload: filter})

@@ -11,6 +11,8 @@ const defaultStyle = {
     opacity: 0,
 }
 
+
+
 const transitionStyles = {
     entering: { opacity: 1 },
     entered: { opacity: 1 },

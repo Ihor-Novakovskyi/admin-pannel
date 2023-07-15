@@ -1,0 +1,29 @@
+{
+  "heroes": [
+    {
+      "id": 2,
+      "name": "Неизвестный герой",
+      "description": "Скрывающийся в тени",
+      "element": "wind"
+    },
+    {
+      "id": "lk3ml0zk",
+      "name": "Mila",
+      "description": "She is good at design",
+      "element": "water"
+    },
+    {
+      "id": "lk3nbyh4",
+      "name": "Igor",
+      "description": "write js code",
+      "element": "fire"
+    }
+  ],
+  "filters": [
+    "all",
+    "fire",
+    "water",
+    "wind",
+    "earth"
+  ]
+}

@@ -5,7 +5,7 @@ const initialState = {
     filter: 'all'
 }
 
-const reducer = (state, {type, payload}) => {
+const reducer = (state, { type, payload }) => {
     switch (type) {
         case 'HEROES_FETCHING':
             return {
@@ -25,15 +25,18 @@ const reducer = (state, {type, payload}) => {
                 heroesLoadingStatus: 'error'
             }
         case 'DELETE_HEROE':
-            console.log('delete horoe id', payload)
-            const currentElements = state.heroes.length !== 0 ?
-            state.heroes.filter((el) => el.id !== payload)
-            :
-            []
-            return { 
+            const filteredAllElements = state.heroes.length !== 0 ?
+                state.heroes.filter((el) => el.id !== payload)
+                :
+                [];
+            const filtered = state.filters.length !== 0 ?
+                state.filters.filter((el) => el.id !== payload)
+                :
+                [];
+            return {
                 ...state,
-                heroes: currentElements,
-                filters: currentElements
+                heroes: filteredAllElements,
+                filters: filtered
             }
         case 'FILTER':
             return {
@@ -46,7 +49,7 @@ const reducer = (state, {type, payload}) => {
             return {
                 ...state,
                 heroes: newListHeroe,
-                filters: newListHeroe
+                filters: payload === 'all' ? newListHeroe : newListHeroe.filter((el) => el.element === state.filter)
             }
         case 'INIT_FILTER':
             return {
@@ -57,4 +60,4 @@ const reducer = (state, {type, payload}) => {
     }
 }
 
-export {reducer, initialState};
+export { reducer, initialState };

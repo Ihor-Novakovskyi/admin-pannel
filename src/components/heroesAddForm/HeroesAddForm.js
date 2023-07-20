@@ -30,7 +30,7 @@ const HeroesAddForm = () => {
             setFilter(resFilter)
         })
         
-    },[]);
+    }, []); [1 , 2 , 3]
     
     const addHeroeToList = (e) => { 
         e.preventDefault();

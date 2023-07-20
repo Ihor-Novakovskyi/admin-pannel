@@ -26,6 +26,7 @@ const HeroesListItem = ({ id, name, description, element }) => {
     const ref = useRef(null);
     const [transparent, setTransparent] = useState('transparent');
     console.log(filter)
+    console.log(name,id)
     let elementClassName = '';
     useEffect(() => {
         if (element === filter || filter === 'all') {

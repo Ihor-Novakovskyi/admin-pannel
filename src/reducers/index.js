@@ -6,6 +6,7 @@ const initialState = {
 }
 
 const reducer = (state, { type, payload }) => {
+    console.log('first work reducer')
     switch (type) {
         case 'HEROES_FETCHING':
             return {

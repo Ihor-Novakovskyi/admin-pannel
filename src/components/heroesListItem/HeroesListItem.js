@@ -66,7 +66,7 @@ const HeroesListItem = ({ id, name, description, element }) => {
             onTransitionEnd={ () => {
                 console.log('end transitioned')
                 if (transparent === 'transparent' && initDelete) {
-                    dispatch(deleteHeroe(id));
+                    console.log('dispatch returning',dispatch(deleteHeroe(id)));
                     request(`http://localhost:3000/heroes/${id}`, 'DELETE')
                     console.log('delete')
                     return;

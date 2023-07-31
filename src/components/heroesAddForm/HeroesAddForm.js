@@ -1,23 +1,13 @@
 
-
-// Задача для этого компонента:
-// Реализовать создание нового героя с введенными данными. Он должен попадать
-// в общее состояние и отображаться в списке + фильтроваться
-// Уникальный идентификатор персонажа можно сгенерировать через uiid
-// Усложненная задача:
-// Персонаж создается и в файле json при помощи метода POST
-// Дополнительно    :
-// Элементы <option></option> желательно сформировать на базе
-// данных из фильтров
 import uniqid from 'uniqid';
 import { addHeroe } from '../../actions';
 import { useEffect, useState } from "react";
-import { useHttp } from "../../hooks/http.hook";
+import { HttpRequest } from "../../hooks/http.hook";
 import { useDispatch } from 'react-redux';
 const HeroesAddForm = () => {
     const dispatch = useDispatch();
     const [filter, setFilter] = useState([]);
-    const { request } = useHttp();
+    const { request } = HttpRequest();
     const [creatingHeroe, setHeroe] = useState({ name: '', description: '', element: '' });
     const { name, description } = creatingHeroe;
     const propertyOfHeroe = (e) => { 
@@ -34,11 +24,8 @@ const HeroesAddForm = () => {
     
     const addHeroeToList = (e) => { 
         e.preventDefault();
-        const c = { id: uniqid(), ...creatingHeroe }
-        console.log(c)
-        dispatch(addHeroe(c))
-        request("http://localhost:3000/heroes", 'POST', JSON.stringify(c))
-        
+        const heroe = { id: uniqid(), ...creatingHeroe }
+        dispatch(addHeroe(heroe))
     }
     return (
         <form onSubmit={addHeroeToList} className="border p-4 shadow-lg rounded">

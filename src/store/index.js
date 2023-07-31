@@ -3,7 +3,7 @@ import {reducer, initialState} from '../reducers';
 import thunk from 'redux-thunk';
 
 
-const firstMidleware = store => next => action => { 
+export const firstMidleware = store => next => action => { 
     // const { type, payload } = action;
     // console.log('first MidleWare work')
     // console.log('store',store.getState())
@@ -25,7 +25,7 @@ const firstMidleware = store => next => action => {
     //     console.log('cccccccccc', c)
     //     return next(c)
     // }
-   
+    console.log('nnnneeexxxxt', next)
     return next(action)
 }
 
@@ -33,13 +33,19 @@ const secondMiddleware = store => next => action => {
     console.log('second Middleware work', action);
     return next(action)
 }
-
+// Как бы я реализовал метод thunk. Этот метод является самым первым методом в конвеерре по цепочке запуска dispatch. Он готов
+//принять метод в аргумент action и если єто функция передать себя же в качестве аргумена запустив функцию из аргумента action
+//actionDO это как бы наш dispath из store. Последний же метод в цепочку мидлваров содержит родной dispath, который изменит state в store
+//actionDO содержит рекурсивный запуск,пока в качестве аргумента не вернется объект. Как раз thunk и используют в асинхронном функционале,
+// для того чтоб прирвать цепочку конвеера,а потом ее запустить при асинхронной операции.
 function thunkMidleware(store) { 
-    return function next (next) { 
-        return function action(action) { 
+    return function next(next) { 
+        return function actionDO(action) { 
+            console.log('actionMidleware', action)
             if (typeof action === 'function') { 
-                return action(next, store)
+                return action(actionDO,store)
             }
+            console.log('actionMidleware11111', action)
            return next(action)
         }
     }
@@ -48,8 +54,5 @@ function thunkMidleware(store) {
 const store = configureStore({
     reducer,
     preloadedState: initialState,
-    // middleware: defaultMidleware => defaultMidleware().concat(firstMidleware, secondMiddleware)
-    middleware: [thunkMidleware,firstMidleware, secondMiddleware]
 })
-// window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
 export default store;

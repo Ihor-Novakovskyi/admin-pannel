@@ -1,30 +1,52 @@
-import { createAction } from "@reduxjs/toolkit"
-export const heroesFetching = createAction('HEROES_FETCHING');
+import { createAction } from "@reduxjs/toolkit";
+import { firstMidleware } from "../store";
+import { HttpRequest } from "../hooks/http.hook";
+
+const { request } = HttpRequest();
+
+export const heroesFetching = (dispatch) => { 
+    dispatch(createAction('HEROES_FETCHING')());
+    request("http://localhost:3000/heroes")
+            .then(data => dispatch(heroesFetched(data)))
+            .catch(() => dispatch(heroesFetchingError()))
+
+};
 export const heroesFetched = createAction('HEROES_FETCHED');
 export const heroesFetchingError = createAction('HEROES_FETCHING_ERROR');
+export const deleteHeroe = ({ id, state }) => (dispatch) => { 
+   const deleteHeroe = createAction('DELETE_HEROE', ({ id, state }) => {
+        return {
+            payload:   {
+                heroes: state.heroes.length !== 0 ?
+                    state.heroes.filter((el) => el.id !== id)
+                    :
+                    [],
+                filter: state.filters.length !== 0 ?
+                    state.filters.filter((el) => el.id !== id)
+                    :
+                    [],
+            }
+        }
+   })
+    request(`http://localhost:3000/heroes/${id}`, 'DELETE')
+        .then((response) => console.log('response',response))
+        .then(() => dispatch(deleteHeroe({ id, state })))
 
-export const deleteHeroe = (id) => (dispatch, state)  => {
-// Делается обертка thunk,его нужно поставить в самом начале,по сути єто такой же мидлвар которій является первім єлеменото нашей композиции.Запускается наш thunk(как мы понимаем это наш наш первый action => {} - dispatch) в качестве аргумента получает {type: DO, payload: true} или метод.Если action - объект,то просто выполнятся наша цепочка конвеера,если же функция, то оставшейся конвеер midlewereThunk в метод который он получил в качестве агрумента action(next) - a next это же наш следуюшщий action из конвеера 
-//И в этом action нужно обязательно запустить конвеер,иначе он не будет работать
-    const { getState } = state;
-    return dispatch({
-        type: 'DELETE_HEROE',
-        payload: {
-                        heroes: getState().heroes.length !== 0 ?
-                        getState().heroes.filter((el) => el.id !== id)
-                        :
-                            [],
-                        filter: getState().filters.length !== 0 ?
-                        getState().filters.filter((el) => el.id !== id)
-                        :
-                        [],
-                    }})
-}
-export const filterHeroes = (filter) => { 
-    return {type: 'FILTER', payload: filter}
-}
-export const addHeroe = (heroe) => ({ type: 'ADD_HEROE', payload: heroe });
-export const initFilter = (filter) => ({ type: 'INIT_FILTER', payload: filter });
+};
+
+
+export const filterHeroes = createAction('FILTER')
+export const addHeroe = (heroe) => (dispatch) => dispatch((dispatch) => dispatch((dispatch) => { 
+    request("http://localhost:3000/heroes", 'POST', JSON.stringify(heroe))
+        .then(() => { 
+            const action = createAction('ADD_HEROE')
+            dispatch(action(heroe))
+        })
+}));
+export const initFilter = createAction('INIT_FILTER');
+
+
+
 // function func(a , b) { 
 //     console.log(a + b)
 // }
@@ -50,3 +72,22 @@ export const initFilter = (filter) => ({ type: 'INIT_FILTER', payload: filter })
 // const funcParse = new Function(arguments1, body);
 // console.dir(funcParse)
 // funcParse(2, 5)
+// export const deleteHeroe = ({ state, id }) => (dispatch) => { 
+//     const action = createAction('DELETE_HEROE', ({ id, state }) => {
+//         console.log('STATE',dispatch)
+//         return {
+//             payload:   {
+//                 heroes: state.heroes.length !== 0 ?
+//                     state.heroes.filter((el) => el.id !== id)
+//                     :
+//                     [],
+//                 filter: state.filters.length !== 0 ?
+//                     state.filters.filter((el) => el.id !== id)
+//                     :
+//                     [],
+//             }
+//         }
+        
+//     });
+//     return dispatch(action({id,state}))
+// }

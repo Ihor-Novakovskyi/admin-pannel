@@ -1,8 +1,7 @@
 
 import { deleteHeroe, filterHeroes } from "../../actions";
-import { useDispatch, useSelector } from "react-redux";
-import { useHttp } from "../../hooks/http.hook";
-import { Transition } from 'react-transition-group';
+import { useDispatch, useSelector, useStore } from "react-redux";
+import { HttpRequest } from "../../hooks/http.hook";
 import { useRef, useState, useEffect } from "react";
 const duration = 1000;
 
@@ -12,21 +11,18 @@ const defaultStyle = {
 }
 
 
-
 const transitionStyles = {
     noTransparent: { opacity: 1 },
     transparent: { opacity: 0 },
 };
 
 const HeroesListItem = ({ id, name, description, element }) => {
-    const { request } = useHttp();
+    const { request } = HttpRequest();
     const filter = useSelector(state => state.filter);
+    const state = useStore().getState();
     const dispatch = useDispatch();
     const [initDelete, setInitDelete] = useState(false)
-    const ref = useRef(null);
     const [transparent, setTransparent] = useState('transparent');
-    console.log(filter)
-    console.log(name,id)
     let elementClassName = '';
     useEffect(() => {
         if (element === filter || filter === 'all') {
@@ -56,7 +52,6 @@ const HeroesListItem = ({ id, name, description, element }) => {
         default:
             elementClassName = 'bg-warning bg-gradient';
     }
-    // console.log(initStyle)
     return (
         <li
             style={ {
@@ -66,21 +61,13 @@ const HeroesListItem = ({ id, name, description, element }) => {
             onTransitionEnd={ () => {
                 console.log('end transitioned')
                 if (transparent === 'transparent' && initDelete) {
-                    console.log('dispatch returning',dispatch(deleteHeroe(id)));
-                    request(`http://localhost:3000/heroes/${id}`, 'DELETE')
-                    console.log('delete')
+                    dispatch(deleteHeroe({id, state}));
                     return;
                 }
                 if (transparent === 'transparent') {
-                    console.log(1)
-                    console.log('id', id)
-                    console.log(1)
                     dispatch(filterHeroes(filter))
-                    console.log('filter', filter)
-                    console.log(2)
                 };
             } }
-            ref={ ref }
             className={ `card flex-row mb-4 shadow-lg text-white ${elementClassName}` }>
             <img src="http://www.stpaulsteinbach.org/wp-content/uploads/2014/09/unknown-hero.jpg"
                 className="img-fluid w-25 d-inline"

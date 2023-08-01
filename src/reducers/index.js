@@ -87,7 +87,7 @@ const deleteHero = ({ id, state }) => (dispatch) => {
  
 export {reducer, deleteHero, heroesFetchingg, addHero, initFilter, filterHeroes}
 
-
+///
 
 
 

@@ -7,7 +7,7 @@ import App from './components/app/App';
 import store from './store';
 
 import './styles/index.scss';
-console.log(store)
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

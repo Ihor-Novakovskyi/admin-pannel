@@ -1,6 +1,7 @@
 import { configureStore, applyMiddleware } from '@reduxjs/toolkit';
-import {reducer, initialState} from '../reducers';
+// import {reducer, initialState} from '../reducers';
 import thunk from 'redux-thunk';
+import { reducer } from '../reducers';
 
 
 export const firstMidleware = store => next => action => { 
@@ -53,6 +54,7 @@ function thunkMidleware(store) {
 
 const store = configureStore({
     reducer,
-    preloadedState: initialState,
+    middleware: [thunk]
+    // preloadedState: initialState,
 })
 export default store;

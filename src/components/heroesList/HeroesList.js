@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { heroesFetching, heroesFetched, heroesFetchingError } from '../../actions';
+import { heroesFetching} from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
-import { createSlice, configureStore, combineReducers } from '@reduxjs/toolkit';
+import { heroesFetchingg,  } from '../../reducers';
 
 const HeroesList = () => {
     const { filters, heroesLoadingStatus } = useSelector(state => state);
@@ -11,7 +11,7 @@ const HeroesList = () => {
    
 
     useEffect(() => {
-        dispatch(heroesFetching);
+        dispatch(heroesFetchingg);
     }, []);
 
     if (heroesLoadingStatus === "loading") {
@@ -39,51 +39,6 @@ const HeroesList = () => {
 }
 
 export default HeroesList;
-
-const sliceIgor = createSlice({
-    name: 'igor',
-    initialState: {
-        name: 'Igor',
-        secondName: 'Novakovskiy',
-        age: 36
-    },
-    reducers: {
-        changeName: (state, action) => { state.name = action.payload },
-        changeSecondName: (state, action) => { state.secondName = action.payload },
-        changeAge: (state, action) => {state.age = action.payload }
-    }
-})
-const sliceMila = createSlice({
-    name: 'mila',
-    initialState: {
-        name: 'Igor',
-        secondName: 'Novakovskiy',
-        age: 36
-    },
-    reducers: {
-        changeName: (state, action) => { state.name = action.payload },
-        changeSecondName: (state, action) => { state.secondName = action.payload },
-        changeAge: (state, action) => {state.age = action.payload }
-    }
-})
-
-const { actions: igorActions, reducer: Igor } = sliceIgor;
-const { actions: milaActions, reducer: Mila } = sliceMila;
-// console.log('actions', actions, 'reducer', reducer);
-const { changeAge, changeNamem, changeSecondName } = igorActions;
-const store = configureStore({
-    reducer: {Igor, Mila }
-});
-const { subscribe, getState, dispatch } = store;
-console.log(getState());
-subscribe(() => { 
-    console.log(getState())
-});
-
-console.log(Igor);
-dispatch(dispatch => { 
-    setTimeout(() => dispatch(changeAge(32)), 3000)
-})
 
 
 

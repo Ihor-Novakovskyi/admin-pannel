@@ -6,10 +6,11 @@
 // Изменять json-файл для удобства МОЖНО!
 // Представьте, что вы попросили бэкенд-разработчика об этом
 import { useDispatch, useSelector } from "react-redux";
-import { initFilter, filterHeroes } from "../../actions";
+// import { initFilter, filterHeroes } from "../../actions";
+import { initFilter, filterHeroes } from "../../reducers";
 const HeroesFilters = () => {
     const dispatch = useDispatch();
-    const activeFilter = useSelector(state => state.filter);
+    const activeFilter = useSelector(state => state.filter);    
     const initialFilter = (e) => {
         const filter = e.target.getAttribute('data-action')
         if (filter !== activeFilter) {

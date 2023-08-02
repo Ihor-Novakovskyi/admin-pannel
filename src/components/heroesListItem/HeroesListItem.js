@@ -1,6 +1,6 @@
 
 // import { deleteHeroe, filterHeroes } from "../../actions";
-import { deleteHero, filterHeroes } from "../../reducers";
+import { deleteHeroe, filterHeroes } from "../../reducers";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { HttpRequest } from "../../hooks/http.hook";
 import { useRef, useState, useEffect } from "react";
@@ -33,7 +33,7 @@ const HeroesListItem = ({ id, name, description, element }) => {
         setTransparent('transparent');
 
     }, [filter])
-    const deleteHeroe = () => {
+    const changeOpiacityBeforeDeleteHeroe = () => {
         setTransparent('transparent');
         setInitDelete(true);
     }
@@ -63,7 +63,7 @@ const HeroesListItem = ({ id, name, description, element }) => {
                 console.log('end transitioned')
                 if (transparent === 'transparent' && initDelete) {
                     // dispatch(deleteHeroe({id, state}));
-                    dispatch(deleteHero({id, state}));
+                    dispatch(deleteHeroe(id));
                     return;
                 }
                 if (transparent === 'transparent') {
@@ -80,7 +80,7 @@ const HeroesListItem = ({ id, name, description, element }) => {
                 <h3 className="card-title">{ name }</h3>
                 <p className="card-text">{ description }</p>
             </div>
-            <span onClick={ deleteHeroe } className="position-absolute top-0 start-100 translate-middle badge border rounded-pill bg-light">
+            <span onClick={ changeOpiacityBeforeDeleteHeroe } className="position-absolute top-0 start-100 translate-middle badge border rounded-pill bg-light">
                 <button type="button" className="btn-close btn-close" aria-label="Close"></button>
             </span>
         </li>

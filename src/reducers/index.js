@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HttpRequest } from "../hooks/http.hook";
+// import { create } from "json-server";
 const { request }= HttpRequest();
 const initialState = {
     heroes: [],
@@ -8,91 +9,142 @@ const initialState = {
     filter: 'all'
 };
 
+const putDataHeroe = createAsyncThunk(
+    'heroes/addHeroe',
+    (heroe) => request("http://localhost:3000/heroes", 'POST',
+        JSON.stringify(heroe)).then(() => heroe));
+
+const getHeroes = createAsyncThunk(
+    'heroes/Load',
+    () => request("http://localhost:3000/heroes"))
+
+const deleteHeroe = createAsyncThunk(
+    'heroes/Delete',
+    ( id, {getState}) => { 
+        const state = getState();
+        return request(`http://localhost:3000/heroes/${id}`, 'DELETE')
+        .then(() => ({
+                    heroes: state.heroes.length !== 0 ?
+                        state.heroes.filter((el) => el.id !== id)
+                        :
+                        [],
+                    filter: state.filters.length !== 0 ?
+                        state.filters.filter((el) => el.id !== id)
+                        :
+                        [],
+                }))
+    }
+)
+
 const slice = createSlice({
     name: 'heroes',
     initialState,
     reducers: {
-        heroesFetched: (state, { payload }) => {
-            state.heroes = payload;
-            state.filters = payload;
-            state.heroesLoadingStatus = 'idle';
-        },
-        heroesFetching: (state) => { state.heroesLoadingStatus = 'loading' },
-        heroesFetchingError: (state) => { state.heroesLoadingStatus = 'error' },
-        deleteHeroe: {
-            reducer: (state, { payload }) => {
-                state.heroes = payload.filter;
-                state.filters = payload.filter;
-            },
-            prepare: ({id, state}) => {
-                return {
-                    payload: {
-                        heroes: state.heroes.length !== 0 ?
-                            state.heroes.filter((el) => el.id !== id)
-                            :
-                            [],
-                        filter: state.filters.length !== 0 ?
-                            state.filters.filter((el) => el.id !== id)
-                            :
-                            [],
-                    }
-                }
-            }
+        // heroesFetched: (state, { payload }) => {
+        //     state.heroes = payload;
+        //     state.filters = payload;
+        //     state.heroesLoadingStatus = 'idle';
+        // },
+        // heroesFetching: (state) => { state.heroesLoadingStatus = 'loading' },
+        // heroesFetchingError: (state) => { state.heroesLoadingStatus = 'error' },
+        // deleteHeroe: {
+        //     reducer: (state, { payload }) => {
+        //         state.heroes = payload.filter;
+        //         state.filters = payload.filter;
+        //     },
+        //     prepare: ({id, state}) => {
+        //         return {
+        //             payload: {
+        //                 heroes: state.heroes.length !== 0 ?
+        //                     state.heroes.filter((el) => el.id !== id)
+        //                     :
+        //                     [],
+        //                 filter: state.filters.length !== 0 ?
+        //                     state.filters.filter((el) => el.id !== id)
+        //                     :
+        //                     [],
+        //             }
+        //         }
+        //     }
 
-        },
+        // },
         filterHeroes: (state, { payload }) => {
             state.filters = payload === 'all' ? state.heroes : state.heroes.filter((el) => el.element === payload)
 
         },
-        addHeroe: (state, payload) => {
-            state.heroes.push(payload);
-                state.filters = state.filter === 'all' ?
-                    state.heroes :
-                    state.heroes.filter((el) => el.element === state.filter)
-        },
-        initFilter: (state, { payload }) => { state.filter = payload }
-       
+        // 'addHeroe/fulfilled': (state, payload) => {
+        //     state.heroes.push(payload);
+        //         state.filters = state.filter === 'all' ?
+        //             state.heroes :
+        //             state.heroes.filter((el) => el.element === state.filter)
+        // },
+        initFilter: (state, { payload }) => { state.filter = payload },   
+    },
+    extraReducers: (builder) => { 
+        builder
+            .addCase(putDataHeroe.fulfilled, (state, {payload}) => {
+                state.heroes.push(payload);
+                    state.filters = state.filter === 'all' ?
+                        state.heroes :
+                        state.heroes.filter((el) => el.element === state.filter)
+            })
+            .addCase(putDataHeroe.rejected, (state) => {
+                state.heroesLoadingStatus = 'error';
+            })
+            .addCase(getHeroes.pending, (state) => {state.heroesLoadingStatus = 'loading'})
+            .addCase(getHeroes.fulfilled, (state, action) => { 
+                console.log('filfilled', action)
+                state.heroes = action.payload;
+                state.filters = action.payload;
+                state.heroesLoadingStatus = 'idle';
+            })
+            .addCase(deleteHeroe.fulfilled, (state, action) => {
+                console.log(action)
+                    state.heroes = action.payload.heroes;
+                    state.filters = action.payload.filter;
+                })
     }
 });
 const { reducer, actions } = slice;
-const { 
-    initFilter,
-    addHeroe,
-    filterHeroes,
-    deleteHeroe,
-    heroesFetchingError,
-    heroesFetching,
-    heroesFetched
-} = actions;
+const { initFilter,filterHeroes } = actions;
 
-const addHero = (heroe) => (dispatch) => dispatch((dispatch) => dispatch((dispatch) => { 
-    request("http://localhost:3000/heroes", 'POST', JSON.stringify(heroe))
-        .then(() => { 
-            dispatch(addHeroe(heroe))
-        })
-}));
-const heroesFetchingg = (dispatch) => { 
-    dispatch(heroesFetching());
-    request("http://localhost:3000/heroes")
-            .then(data => dispatch(heroesFetched(data)))
-            .catch(() => dispatch(heroesFetchingError()))
+// const addHero = (heroe) => (dispatch) => { 
+//     request("http://localhost:3000/heroes", 'POST', JSON.stringify(heroe))
+//         .then(() => { 
+//             dispatch(addHeroe(heroe))
+//         })
+// };
+// const heroesFetchingg = (dispatch) => { 
+//     dispatch(heroesFetching());
+//     request("http://localhost:3000/heroes")
+//             .then(data => dispatch(heroesFetched(data)))
+//             .catch(() => dispatch(heroesFetchingError()))
 
-};
-const deleteHero = ({ id, state }) => (dispatch) => {
-    request(`http://localhost:3000/heroes/${id}`, 'DELETE')
-        .then((response) => console.log('response', response))
-        .then(() => dispatch(deleteHeroe({ id, state })))
+// };
+// const deleteHero = ({ id, state }) => (dispatch) => {
+//     request(`http://localhost:3000/heroes/${id}`, 'DELETE')
+//         .then((response) => console.log('response', response))
+//         .then(() => dispatch(deleteHeroe({ id, state })))
  
-};
+// };
  
-export {reducer, deleteHero, heroesFetchingg, addHero, initFilter, filterHeroes}
+export {reducer,  initFilter, filterHeroes, putDataHeroe, getHeroes, deleteHeroe}
 
 ///
 
 
 
-
-
+//Это просто абстрактное объяснение работы обертки создаваемой createAsyncThunk  ======>>>>
+// const putDataHeroe = createAsyncThunk(
+//     'heroes/addHeroe',
+//     (heroe, { dispatch }) => request("http://localhost:3000/heroes", 'POST', JSON.stringify(heroe))
+//         .then(() => heroe)// create AsyncThunk цепляет свои then к обработчки выполнения промиса
+// //then((res) => dispatch({type: putData.fulfilled, payload: res})).catch((r) => )
+//     //там соответсвенно будет больше логики,єто обстарктное представление
+//     // .then(() => { 
+//     //    return dispatch(addHeroe(heroe))
+//     // })
+// )//<======
 
 // const reducerObject = {
 //     'HEROES_FETCHING': (state, payload ) => ({ ...state, heroesLoadingStatus: 'loading' }),
@@ -134,7 +186,6 @@ export {reducer, deleteHero, heroesFetchingg, addHero, initFilter, filterHeroes}
 //     })
 // }
 // const reducer = (state, { type, payload }) => {
-//     console.log('first work reducer')
 //     return reducerObject[type] ? reducerObject[type](state, payload) : state;
 // }
 

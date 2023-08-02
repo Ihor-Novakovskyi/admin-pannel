@@ -3,15 +3,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { heroesFetching} from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
-import { heroesFetchingg,  } from '../../reducers';
+import { heroesFetchingg,  getHeroes} from '../../reducers';
 
 const HeroesList = () => {
     const { filters, heroesLoadingStatus } = useSelector(state => state);
     const dispatch = useDispatch();
+    console.log('filters', filters)
    
 
     useEffect(() => {
-        dispatch(heroesFetchingg);
+        // dispatch(heroesFetchingg);
+        console.log('run')
+        dispatch(getHeroes()).then(r => console.log(r))
     }, []);
 
     if (heroesLoadingStatus === "loading") {

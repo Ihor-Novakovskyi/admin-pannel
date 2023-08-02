@@ -1,10 +1,10 @@
 
 import uniqid from 'uniqid';
-import { addHeroe } from '../../actions';
+// import { addHeroe } from '../../actions';
 import { useEffect, useState } from "react";
 import { HttpRequest } from "../../hooks/http.hook";
 import { useDispatch } from 'react-redux';
-import { addHero } from '../../reducers';
+import { addHero, putDataHeroe } from '../../reducers';
 const HeroesAddForm = () => {
     const dispatch = useDispatch();
     const [filter, setFilter] = useState([]);
@@ -27,7 +27,8 @@ const HeroesAddForm = () => {
         e.preventDefault();
         const heroe = { id: uniqid(), ...creatingHeroe }
         // dispatch(addHeroe(heroe));
-        dispatch(addHero(heroe));
+        // dispatch(putDataHeroe(heroe));
+        dispatch(putDataHeroe(heroe))
     }
     return (
         <form onSubmit={addHeroeToList} className="border p-4 shadow-lg rounded">

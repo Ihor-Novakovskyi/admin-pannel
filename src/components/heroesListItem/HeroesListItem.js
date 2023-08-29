@@ -18,9 +18,7 @@ const transitionStyles = {
 };
 
 const HeroesListItem = ({ id, name, description, element }) => {
-    const { request } = HttpRequest();
     const filter = useSelector(state => state.filter);
-    const state = useStore().getState();
     const dispatch = useDispatch();
     const [initDelete, setInitDelete] = useState(false)
     const [transparent, setTransparent] = useState('transparent');
@@ -60,15 +58,11 @@ const HeroesListItem = ({ id, name, description, element }) => {
                 ...transitionStyles[transparent]
             } }
             onTransitionEnd={ () => {
-                console.log('end transitioned')
                 if (transparent === 'transparent' && initDelete) {
-                    // dispatch(deleteHeroe({id, state}));
                     dispatch(deleteHeroe(id));
                     return;
                 }
-                if (transparent === 'transparent') {
-                    dispatch(filterHeroes(filter))
-                };
+                dispatch(filterHeroes(filter))
             } }
             className={ `card flex-row mb-4 shadow-lg text-white ${elementClassName}` }>
             <img src="http://www.stpaulsteinbach.org/wp-content/uploads/2014/09/unknown-hero.jpg"

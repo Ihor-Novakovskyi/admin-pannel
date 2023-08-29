@@ -1,7 +1,7 @@
 import { configureStore, applyMiddleware } from '@reduxjs/toolkit';
 // import {reducer, initialState} from '../reducers';
 import thunk from 'redux-thunk';
-import { reducer } from '../reducers';
+import { reducer, initialState } from '../reducers';
 
 
 export const firstMidleware = store => next => action => { 
@@ -39,22 +39,19 @@ const secondMiddleware = store => next => action => {
 //actionDO это как бы наш dispath из store. Последний же метод в цепочку мидлваров содержит родной dispath, который изменит state в store
 //actionDO содержит рекурсивный запуск,пока в качестве аргумента не вернется объект. Как раз thunk и используют в асинхронном функционале,
 // для того чтоб прирвать цепочку конвеера,а потом ее запустить при асинхронной операции.
-function thunkMidleware(store) { 
-    return function next(next) { 
-        return function actionDO(action) { 
-            console.log('actionMidleware', action)
+function thunkMidleware(store, arg) { 
+    return function next(next, arg) { 
+        return function actionDO(action, arg) { 
             if (typeof action === 'function') { 
                 return action(actionDO,store)
             }
-            console.log('actionMidleware11111', action)
            return next(action)
         }
     }
 }
-
+ 
 const store = configureStore({
     reducer,
     middleware: [thunk]
-    // preloadedState: initialState,
 })
 export default store;

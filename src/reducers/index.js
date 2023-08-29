@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HttpRequest } from "../hooks/http.hook";
-// import { create } from "json-server";
-const { request }= HttpRequest();
+
+const { request } = HttpRequest();
 const initialState = {
     heroes: [],
     heroesLoadingStatus: 'idle',
@@ -20,8 +20,9 @@ const getHeroes = createAsyncThunk(
 
 const deleteHeroe = createAsyncThunk(
     'heroes/Delete',
-    ( id, {getState}) => { 
+    (id, {getState}) => { 
         const state = getState();
+        
         return request(`http://localhost:3000/heroes/${id}`, 'DELETE')
         .then(() => ({
                     heroes: state.heroes.length !== 0 ?
@@ -37,47 +38,16 @@ const deleteHeroe = createAsyncThunk(
 )
 
 const slice = createSlice({
-    name: 'heroes',
+    name: 'heroeS',
     initialState,
     reducers: {
-        // heroesFetched: (state, { payload }) => {
-        //     state.heroes = payload;
-        //     state.filters = payload;
-        //     state.heroesLoadingStatus = 'idle';
-        // },
-        // heroesFetching: (state) => { state.heroesLoadingStatus = 'loading' },
-        // heroesFetchingError: (state) => { state.heroesLoadingStatus = 'error' },
-        // deleteHeroe: {
-        //     reducer: (state, { payload }) => {
-        //         state.heroes = payload.filter;
-        //         state.filters = payload.filter;
-        //     },
-        //     prepare: ({id, state}) => {
-        //         return {
-        //             payload: {
-        //                 heroes: state.heroes.length !== 0 ?
-        //                     state.heroes.filter((el) => el.id !== id)
-        //                     :
-        //                     [],
-        //                 filter: state.filters.length !== 0 ?
-        //                     state.filters.filter((el) => el.id !== id)
-        //                     :
-        //                     [],
-        //             }
-        //         }
-        //     }
-
-        // },
         filterHeroes: (state, { payload }) => {
-            state.filters = payload === 'all' ? state.heroes : state.heroes.filter((el) => el.element === payload)
+            state.filters = payload === 'all' ?
+            state.heroes
+                :
+            state.heroes.filter((el) => el.element === payload)
 
         },
-        // 'addHeroe/fulfilled': (state, payload) => {
-        //     state.heroes.push(payload);
-        //         state.filters = state.filter === 'all' ?
-        //             state.heroes :
-        //             state.heroes.filter((el) => el.element === state.filter)
-        // },
         initFilter: (state, { payload }) => { state.filter = payload },   
     },
     extraReducers: (builder) => { 
@@ -91,15 +61,15 @@ const slice = createSlice({
             .addCase(putDataHeroe.rejected, (state) => {
                 state.heroesLoadingStatus = 'error';
             })
-            .addCase(getHeroes.pending, (state) => {state.heroesLoadingStatus = 'loading'})
-            .addCase(getHeroes.fulfilled, (state, action) => { 
-                console.log('filfilled', action)
-                state.heroes = action.payload;
-                state.filters = action.payload;
+            .addCase(getHeroes.pending, (state, payload) => {
+                state.heroesLoadingStatus = 'loading';
+            })
+            .addCase(getHeroes.fulfilled, (state, {payload}) => { 
+                state.heroes = payload;
+                state.filters = payload;
                 state.heroesLoadingStatus = 'idle';
             })
             .addCase(deleteHeroe.fulfilled, (state, action) => {
-                console.log(action)
                     state.heroes = action.payload.heroes;
                     state.filters = action.payload.filter;
                 })
@@ -107,7 +77,7 @@ const slice = createSlice({
 });
 const { reducer, actions } = slice;
 const { initFilter,filterHeroes } = actions;
-
+// dispatch(addHero(id))
 // const addHero = (heroe) => (dispatch) => { 
 //     request("http://localhost:3000/heroes", 'POST', JSON.stringify(heroe))
 //         .then(() => { 
@@ -127,8 +97,7 @@ const { initFilter,filterHeroes } = actions;
 //         .then(() => dispatch(deleteHeroe({ id, state })))
  
 // };
- 
-export {reducer,  initFilter, filterHeroes, putDataHeroe, getHeroes, deleteHeroe}
+export {initialState,reducer,  initFilter, filterHeroes, putDataHeroe, getHeroes, deleteHeroe}
 
 ///
 
@@ -138,10 +107,10 @@ export {reducer,  initFilter, filterHeroes, putDataHeroe, getHeroes, deleteHeroe
 // const putDataHeroe = createAsyncThunk(
 //     'heroes/addHeroe',
 //     (heroe, { dispatch }) => request("http://localhost:3000/heroes", 'POST', JSON.stringify(heroe))
-//         .then(() => heroe)// create AsyncThunk цепляет свои then к обработчки выполнения промиса
+//         .then(() => heroe)// create AsyncThunk цепляет свои then  обработчки выполнения промиса
 // //then((res) => dispatch({type: putData.fulfilled, payload: res})).catch((r) => )
 //     //там соответсвенно будет больше логики,єто обстарктное представление
-//     // .then(() => { 
+//     // .then(() => {
 //     //    return dispatch(addHeroe(heroe))
 //     // })
 // )//<======
@@ -188,7 +157,7 @@ export {reducer,  initFilter, filterHeroes, putDataHeroe, getHeroes, deleteHeroe
 // const reducer = (state, { type, payload }) => {
 //     return reducerObject[type] ? reducerObject[type](state, payload) : state;
 // }
-
+// const HEROES_FETCHING = 'HEROES_FETCHING';
 // export { reducer, initialState };
 // const reducer = (state, { type, payload }) => {
     // switch (type) {
@@ -248,3 +217,4 @@ export {reducer,  initFilter, filterHeroes, putDataHeroe, getHeroes, deleteHeroe
     //     default: return state
     // }
 // }
+

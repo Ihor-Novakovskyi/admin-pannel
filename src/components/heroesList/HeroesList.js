@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { heroesFetching} from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
-import { heroesFetchingg,  getHeroes} from '../../reducers';
+import { getHeroes} from '../../reducers';
 
 const HeroesList = () => {
     const { filters, heroesLoadingStatus } = useSelector(state => state);
@@ -12,9 +11,7 @@ const HeroesList = () => {
    
 
     useEffect(() => {
-        // dispatch(heroesFetchingg);
-        console.log('run')
-        dispatch(getHeroes()).then(r => console.log(r))
+        dispatch(getHeroes())
     }, []);
 
     if (heroesLoadingStatus === "loading") {
@@ -25,7 +22,7 @@ const HeroesList = () => {
 
     const renderHeroesList = (arr) => {
         if (arr.length === 0) {
-            return <h5 className="text-center mt-5">Героев пока нет</h5>
+            return <h5 className="text-center mt-5">Heroes list is empty</h5>
         }
 
         return arr.map(({id, ...props}) => {

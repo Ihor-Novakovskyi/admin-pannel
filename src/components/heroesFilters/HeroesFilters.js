@@ -1,12 +1,5 @@
 
-// Задача для этого компонента:
-// Фильтры должны формироваться на основании загруженных данных
-// Фильтры должны отображать только нужных героев при выборе
-// Активный фильтр имеет класс active
-// Изменять json-файл для удобства МОЖНО!
-// Представьте, что вы попросили бэкенд-разработчика об этом
 import { useDispatch, useSelector } from "react-redux";
-// import { initFilter, filterHeroes } from "../../actions";
 import { initFilter, filterHeroes } from "../../reducers";
 const HeroesFilters = () => {
     const dispatch = useDispatch();
@@ -24,11 +17,11 @@ const HeroesFilters = () => {
             <div className="card-body">
                 <p className="card-text">Отфильтруйте героев по элементам</p>
                 <div className="btn-group">
-                    <button onClick={ initialFilter } data-action='all' className={ `btn btn-outline-dark ${activeFilter === 'all' ? 'active' : ''}` }>Все</button>
-                    <button onClick={ initialFilter } data-action='fire' className={ `btn btn-danger ${activeFilter === 'fire' ? 'active' : ''}` }>Огонь</button>
-                    <button onClick={ initialFilter } data-action='water' className={ `btn btn-primary ${activeFilter === 'water' ? 'active' : ''}` }>Вода</button>
-                    <button onClick={ initialFilter } data-action='wind' className={ `btn btn-success ${activeFilter === 'wind' ? 'active' : ''}` }>Ветер</button>
-                    <button onClick={ initialFilter } data-action='earth' className={ `btn btn-secondary ${activeFilter === 'earth' ? 'active' : ''}` }>Земля</button>
+                    <button onClick={ initialFilter } data-action='all' className={ `btn btn-outline-dark ${activeFilter === 'all' ? 'active' : ''}` }>All</button>
+                    <button onClick={ initialFilter } data-action='fire' className={ `btn btn-danger ${activeFilter === 'fire' ? 'active' : ''}` }>Fire</button>
+                    <button onClick={ initialFilter } data-action='water' className={ `btn btn-primary ${activeFilter === 'water' ? 'active' : ''}` }>Water</button>
+                    <button onClick={ initialFilter } data-action='wind' className={ `btn btn-success ${activeFilter === 'wind' ? 'active' : ''}` }>Wind</button>
+                    <button onClick={ initialFilter } data-action='earth' className={ `btn btn-secondary ${activeFilter === 'earth' ? 'active' : ''}` }>Earth</button>
                 </div>
             </div>
         </div>

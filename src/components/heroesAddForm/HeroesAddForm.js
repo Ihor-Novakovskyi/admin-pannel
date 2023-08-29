@@ -1,16 +1,14 @@
 
 import uniqid from 'uniqid';
-// import { addHeroe } from '../../actions';
 import { useEffect, useState } from "react";
 import { HttpRequest } from "../../hooks/http.hook";
 import { useDispatch } from 'react-redux';
-import { addHero, putDataHeroe } from '../../reducers';
+import { putDataHeroe } from '../../reducers';
 const HeroesAddForm = () => {
     const dispatch = useDispatch();
     const [filter, setFilter] = useState([]);
     const { request } = HttpRequest();
     const [creatingHeroe, setHeroe] = useState({ name: '', description: '', element: '' });
-    const { name, description } = creatingHeroe;
     const propertyOfHeroe = (e) => { 
         const nameElement = e.target.name;
         const value = e.target.value;
@@ -26,14 +24,12 @@ const HeroesAddForm = () => {
     const addHeroeToList = (e) => { 
         e.preventDefault();
         const heroe = { id: uniqid(), ...creatingHeroe }
-        // dispatch(addHeroe(heroe));
-        // dispatch(putDataHeroe(heroe));
         dispatch(putDataHeroe(heroe))
     }
     return (
         <form onSubmit={addHeroeToList} className="border p-4 shadow-lg rounded">
             <div className="mb-3">
-                <label htmlFor="name" className="form-label fs-4">Имя нового героя</label>
+                <label htmlFor="name" className="form-label fs-4">New hero name</label>
                 <input 
                     required
                     onChange={propertyOfHeroe}
@@ -41,39 +37,39 @@ const HeroesAddForm = () => {
                     name="name" 
                     className="form-control" 
                     id="name" 
-                    placeholder="Как меня зовут?"/>
+                    placeholder="What is my name?"/>
             </div>
 
             <div className="mb-3">
-                <label htmlFor="text" className="form-label fs-4">Описание</label>
+                <label htmlFor="text" className="form-label fs-4">Description</label>
                 <textarea
                     required
                     onChange={propertyOfHeroe}
                     name="description" 
                     className="form-control" 
                     id="text" 
-                    placeholder="Что я умею?"
+                    placeholder="What can i do?"
                     style={{"height": '130px'}}/>
             </div>
 
             <div className="mb-3">
-                <label htmlFor="element" className="form-label">Выбрать элемент героя</label>
+                <label htmlFor="element" className="form-label">Select herо element</label>
                 <select 
                     required
                     onChange={propertyOfHeroe}
                     className="form-select" 
-                    id="element" 
+                    id="element"    
                     name="element"
                 >
-                    <option value="">Я владею элементом...</option>
-                    <option value={filter[1]}>Огонь</option>
-                    <option value={filter[2]}>Вода</option>
-                    <option value={filter[3]}>Ветер</option>
-                    <option value={filter[4]}>Земля</option>
+                    <option value="">I use element...</option>
+                    <option value={filter[1]}>Fire</option>
+                    <option value={filter[2]}>Water</option>
+                    <option value={filter[3]}>Wind</option>
+                    <option value={filter[4]}>Earth</option>
                 </select>
             </div>
 
-            <button type="submit" className="btn btn-primary">Создать</button>
+            <button type="submit" className="btn btn-primary">Create</button>
         </form>
     )
 }

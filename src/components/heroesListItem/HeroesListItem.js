@@ -51,6 +51,7 @@ const HeroesListItem = ({ id, name, description, element }) => {
         default:
             elementClassName = 'bg-warning bg-gradient';
     }
+    // dispatch((disp, store) => console.log(store()))
     return (
         <li
             style={ {

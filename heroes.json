@@ -1,5 +1,24 @@
 {
-  "heroes": [],
+  "heroes": [
+    {
+      "id": "llyyl0i6",
+      "name": "Mila",
+      "description": "She is good at UI/UX design",
+      "element": "water"
+    },
+    {
+      "id": "llyz3gz7",
+      "name": "Igor",
+      "description": "I'm good at JS",
+      "element": "fire"
+    },
+    {
+      "id": "llyz44q0",
+      "name": "Thor",
+      "description": "He is good at throw mjolnir",
+      "element": "wind"
+    }
+  ],
   "filters": [
     "all",
     "fire",
